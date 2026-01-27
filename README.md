@@ -1,3 +1,10 @@
+# 🍴 FORK NOTES
+
+
+**Current Version:** `1.2.0` | [Full Changelog](./CHANGELOG.md)
+
+---
+# UPSTREAM DOCUMENTATION
 # Build a Kubernetes cluster using K3s via Ansible
 
 Author: <https://github.com/itwars>  
