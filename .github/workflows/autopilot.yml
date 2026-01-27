@@ -142,7 +142,7 @@ jobs:
               upstream = content.split(separator)[-1].strip() if separator in content else content.strip()
 
           with open('README.md', 'w') as f:
-              f.write(f"# 🍴 FORK NOTES\n{fork_header}\n\n")
+              f.write(f"{fork_header}\n\n")
               f.write(f"**Current Version:** `{new_ver}` | [Full Changelog](./CHANGELOG.md)\n")
               f.write(f"\n---\n{separator}\n{upstream}")
 
