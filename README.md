@@ -2,7 +2,7 @@
 # mattykay/k3s-ansible 
 
 [![Collection Autopilot](https://github.com/mattykay/k3s-ansible/actions/workflows/autopilot.yml/badge.svg)](https://github.com/mattykay/k3s-ansible/actions/workflows/autopilot.yml))
-[![Galaxy Version](https://img.shields.io/ansible/v/mattykay/k3s_ansible?label=Galaxy%20Collection)](https://galaxy.ansible.com/ui/repo/published/mattykay/k3s_ansible/)
+[![Galaxy Version](https://img.shields.io/ansible/collection/d/mattykay/k3s_ansible)](https://galaxy.ansible.com/ui/repo/published/mattykay/k3s_ansible/)
 
 This repository is a maintained fork of the [k3s-io/k3s-ansible](https://github.com/k3s-io/k3s-ansible). 
 
@@ -21,7 +21,7 @@ To use this specific fork, install it via Ansible Galaxy using this namespace:
 ansible-galaxy collection install mattykay.k3s_ansible
 ```
 
-**Current Version:** `1.2.1` | [Full Changelog](./CHANGELOG.md)
+**Current Version:** `1.2.2` | [Full Changelog](./CHANGELOG.md)
 
 ---
 # UPSTREAM DOCUMENTATION
