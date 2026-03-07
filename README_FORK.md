@@ -7,7 +7,7 @@ This repository is a maintained fork of the [k3s-io/k3s-ansible](https://github.
 
 ### Why this fork exists:
 * **Automated Releases:** Automatically packaged and published to Ansible Galaxy (since they don't as per [this](https://github.com/k3s-io/k3s-ansible/issues/316#issuecomment-2030389486))
-* **Semantic Versioning:** Auto-calculated versioning based on commit history (best effort since not all upstream commits confirm to semver)
+* **Semantic Versioning:** Auto-calculated versioning based on commit history (best effort since not all upstream commits conform to semver)
 * **Continuous Sync:** Stays up-to-date with upstream changes via daily automated merges.
 
 ---
