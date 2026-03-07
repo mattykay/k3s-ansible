@@ -53,7 +53,7 @@ jobs:
         id: process
         shell: python
         run: |
-          import os, yaml, sys, subprocess, re
+          import os, yaml, sys, subprocess, re, datetime
 
           def run_git(args):
               return subprocess.check_output(['git'] + args).decode().strip()
@@ -110,7 +110,36 @@ jobs:
               'authors': ['Matthew Kalnins <github@mattykay.com>', 'k3s-io community']
           })
 
-          # 5. Ensure Role Metadata (The "Galaxy Structure Fix")
+          # 5. Update CHANGELOG_FORK.md
+          today = datetime.date.today().isoformat()
+          
+          try:
+              last_tag = run_git(['describe', '--tags', '--abbrev=0'])
+              # Format: * hash - message (date)
+              changelog_raw = run_git(['log', f'{last_tag}..HEAD', '--pretty=format:* %h - %s (%ad)', '--date=short'])
+          except Exception:
+              changelog_raw = run_git(['log', '--pretty=format:* %h - %s (%ad)', '--date=short'])
+
+          if not changelog_raw.strip():
+              changelog_raw = "* No code changes (administrative release or forced push)."
+
+          new_changelog_entry = f"## [{new_ver}] - {today}\n\n{changelog_raw}\n\n"
+
+          changelog_file = 'CHANGELOG_FORK.md'
+          header = "# Changelog (Fork)\n\n"
+          existing_content = ""
+          
+          if os.path.exists(changelog_file):
+              with open(changelog_file, 'r') as f:
+                  # Strip the header if it exists so we don't duplicate it
+                  existing_content = f.read().replace(header, "")
+
+          with open(changelog_file, 'w') as f:
+              f.write(header + new_changelog_entry + existing_content)
+          
+          print(f"Updated {changelog_file} for version {new_ver}")
+
+          # 6. Ensure Role Metadata (The "Galaxy Structure Fix")
           roles_path = 'roles'
           if os.path.exists(roles_path):
               for role in os.listdir(roles_path):
@@ -127,11 +156,10 @@ jobs:
                           with open(os.path.join(meta_dir, 'main.yml'), 'w') as f:
                               f.write("galaxy_info:\n  author: mattykay\n  description: k3s role\n  license: Apache-2.0")
 
-          # 6. Write files
+          # 7. Write files
           with open('galaxy.yml', 'w') as f:
               yaml.dump(galaxy_data, f, default_flow_style=False)
 
-          # (README assembly logic remains the same...)
           separator = "# UPSTREAM DOCUMENTATION"
           fork_header = ""
           if os.path.exists('README_FORK.md'):
@@ -144,10 +172,10 @@ jobs:
 
           with open('README.md', 'w') as f:
               f.write(f"{fork_header}\n\n")
-              f.write(f"**Current Version:** `{new_ver}` | [Full Changelog](./CHANGELOG.md)\n")
+              f.write(f"**Current Version:** `{new_ver}` | [Full Changelog](./CHANGELOG_FORK.md)\n")
               f.write(f"\n---\n{separator}\n{upstream}")
 
-          # 7. Set Outputs
+          # 8. Set Outputs
           with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
               out.write(f"new_tag={new_ver}\n")
               out.write(f"bump_type={bump}\n") 
@@ -155,7 +183,7 @@ jobs:
       - name: Commit and Tag
         if: steps.sync.outputs.changed == 'true' && inputs.dry_run == false
         run: |
-          git add galaxy.yml README.md
+          git add galaxy.yml README.md CHANGELOG_FORK.md
           git commit -m "chore: release ${{ steps.process.outputs.new_tag }} [skip ci]"
           
           # Create the tag locally
