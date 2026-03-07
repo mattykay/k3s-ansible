@@ -24,8 +24,9 @@ jobs:
       actions: write # Required for pruning old runs
     steps:
       - name: Checkout Fork
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
+          token: ${{ secrets.SYNC_PAT }}
           fetch-depth: 0
 
       - name: Sync with Upstream
