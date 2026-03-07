@@ -107,6 +107,8 @@ jobs:
               'version': new_ver,
               'namespace': 'mattykay',
               'name': 'k3s_ansible',
+              'homepage': 'https://github.com/mattykay/k3s-ansible',
+              'repository': 'https://github.com/mattykay/k3s-ansible',
               'authors': ['Matthew Kalnins <github@mattykay.com>', 'k3s-io community']
           })
 

@@ -7,14 +7,14 @@ dependencies:
   community.general: '>=7.0.0'
 description: Build a Kubernetes cluster using K3s via Ansible
 documentation: https://github.com/k3s-io/k3s-ansible/blob/main/README.md
-homepage: https://github.com/k3s-io/k3s-ansible
+homepage: https://github.com/mattykay/k3s-ansible
 issues: https://github.com/k3s-io/k3s-ansible/issues
 license:
 - Apache-2.0
 name: k3s_ansible
 namespace: mattykay
 readme: README.md
-repository: https://github.com/k3s-io/k3s-ansible
+repository: https://github.com/mattykay/k3s-ansible
 tags:
 - infrastructure
 - linux
