@@ -32,17 +32,23 @@ jobs:
       - name: Sync with Upstream
         id: sync
         run: |
-          # Replace with the actual upstream repository
           git remote add upstream https://github.com/k3s-io/k3s-ansible.git
           git fetch upstream
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          MERGE_OUTPUT=$(git merge upstream/main --no-edit || echo "Merge failed")
-          echo "$MERGE_OUTPUT"
-
-          # Logic: Mark as changed if there's a merge OR if we are forcing a run
-          if [[ "$MERGE_OUTPUT" != *"Already up to date."* ]] || [[ "${{ inputs.force_publish }}" == "true" ]]; then
+          # Attempt merge. If it fails (likely due to galaxy.yml), 
+          # we specifically checkout the upstream version of galaxy.yml to clear the markers.
+          if ! git merge upstream/main --no-edit; then
+            echo "Merge conflict detected in metadata. Resolving using upstream source..."
+            git checkout upstream/main -- galaxy.yml
+            git add galaxy.yml
+            # No need to commit yet; the Python script will modify it further.
+          fi
+          
+          MERGE_OUTPUT=$(git log HEAD..upstream/main --oneline)
+          
+          if [[ -n "$MERGE_OUTPUT" ]] || [[ "${{ inputs.force_publish }}" == "true" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -101,7 +107,8 @@ jobs:
 
           # 4. Update galaxy.yml Data
           with open('galaxy.yml', 'r') as f:
-              galaxy_data = yaml.safe_load(f)
+              docs = list(yaml.safe_load_all(f))
+              galaxy_data = docs[0] if docs else {}
 
           galaxy_data.update({
               'version': new_ver,
@@ -160,7 +167,7 @@ jobs:
 
           # 7. Write files
           with open('galaxy.yml', 'w') as f:
-              yaml.dump(galaxy_data, f, default_flow_style=False)
+              yaml.dump(galaxy_data, f, default_flow_style=False, explicit_start=True)
 
           separator = "# UPSTREAM DOCUMENTATION"
           fork_header = ""
