@@ -20,7 +20,7 @@ To use this specific fork, install it via Ansible Galaxy using this namespace:
 ansible-galaxy collection install mattykay.k3s_ansible
 ```
 
-**Current Version:** `1.2.7` | [Full Changelog](./CHANGELOG_FORK.md)
+**Current Version:** `1.2.8` | [Full Changelog](./CHANGELOG_FORK.md)
 
 ---
 # UPSTREAM DOCUMENTATION

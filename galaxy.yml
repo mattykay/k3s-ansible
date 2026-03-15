@@ -1,3 +1,4 @@
+---
 authors:
 - Matthew Kalnins <github@mattykay.com>
 - k3s-io community
@@ -19,4 +20,4 @@ tags:
 - infrastructure
 - linux
 - tools
-version: 1.2.7
+version: 1.2.8
