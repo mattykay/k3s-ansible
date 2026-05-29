@@ -34,7 +34,7 @@ Easily bring up a cluster on machines running:
 - [X] Debian
 - [X] Ubuntu
 - [X] Raspberry Pi OS
-- [X] RHEL Family (CentOS, Redhat, Rocky Linux...)
+- [X] RHEL Family (CentOS, Redhat, Rocky Linux, Oracle Linux...)
 - [X] SUSE Family (SLES, OpenSUSE Leap, Tumbleweed...)
 - [X] ArchLinux
 
@@ -135,14 +135,14 @@ Alternatively, to run the playbook from your existing project setup, run the pla
 
 ```yaml
 - name: Import kube cluster playbook
-  ansible.builtin.import_playbook: k3s-ansible/playbooks/site.yml
+  ansible.builtin.import_playbook: k3s.orchestration.site
 ```
 
 *Running the playbook from inside the repository*
 
 ```yaml
 - name: Import kube cluster playbook
-  ansible.builtin.import_playbook: k3s.orchestration.site
+  ansible.builtin.import_playbook: k3s-ansible/playbooks/site.yml
 ```
 
 
