@@ -167,10 +167,10 @@ jobs:
               
               try:
                   last_tag = tags[0]
-                  # Format: * hash - message (date)
-                  changelog_raw = run_git(['log', f'{last_tag}..HEAD', '--pretty=format:* %h - %s (%ad)', '--date=short'])
+                  # Format: * [hash](commit url) - message (date)
+                  changelog_raw = run_git(['log', f'{last_tag}..HEAD', '--pretty=format:* [%h](https://github.com/mattykay/k3s-ansible/commit/%H) - %s (%ad)', '--date=short'])
               except Exception:
-                  changelog_raw = run_git(['log', '--pretty=format:* %h - %s (%ad)', '--date=short'])
+                  changelog_raw = run_git(['log', '--pretty=format:* [%h](https://github.com/mattykay/k3s-ansible/commit/%H) - %s (%ad)', '--date=short'])
 
               if not changelog_raw.strip():
                   changelog_raw = "* No code changes (administrative release or forced push)."
