@@ -16,6 +16,10 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: collection-autopilot
+  cancel-in-progress: false
+
 jobs:
   maintain-fork:
     runs-on: ubuntu-24.04
@@ -33,7 +37,7 @@ jobs:
         id: sync
         run: |
           git remote add upstream https://github.com/k3s-io/k3s-ansible.git
-          git fetch upstream
+          git fetch --no-tags upstream main:refs/remotes/upstream/main
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           BEFORE_SHA=$(git rev-parse HEAD)
@@ -59,6 +63,12 @@ jobs:
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
+
+          if [[ "$(git rev-parse HEAD)" != "$BEFORE_SHA" ]] || ! git diff --quiet HEAD || ! git diff --cached --quiet; then
+            echo "upstream_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "upstream_changed=false" >> "$GITHUB_OUTPUT"
+          fi
           
       - name: Install Ansible Core
         if: (steps.sync.outputs.changed == 'true' || inputs.force_publish == true)
@@ -69,19 +79,35 @@ jobs:
         id: process
         shell: python
         run: |
-          import os, yaml, sys, subprocess, re, datetime
+          import os, yaml, subprocess, re, datetime
 
           def run_git(args):
               return subprocess.check_output(['git'] + args).decode().strip()
 
+          def semver_tags():
+              try:
+                  tags = run_git(['tag', '--list', '--sort=-v:refname']).splitlines()
+              except Exception:
+                  return []
+              return [tag for tag in tags if re.fullmatch(r'v?\d+\.\d+\.\d+', tag)]
+
+          def normalize_version(version):
+              return re.sub(r'^v', '', version)
+
+          force_publish = '${{ inputs.force_publish }}' == 'true'
+          upstream_changed = '${{ steps.sync.outputs.upstream_changed }}' == 'true'
+          head_tags = [
+              tag for tag in run_git(['tag', '--points-at', 'HEAD']).splitlines()
+              if re.fullmatch(r'v?\d+\.\d+\.\d+', tag)
+          ]
+          retry_existing_release = force_publish and not upstream_changed and bool(head_tags)
+
           # 1. Get the Current Version (Source of Truth = Git Tags)
-          try:
-              # Get the latest tag name
-              current_ver_str = run_git(['describe', '--tags', '--abbrev=0'])
-              # Remove 'v' prefix if it exists
-              current_ver_str = re.sub(r'^v', '', current_ver_str)
-              print(f"Found latest tag: {current_ver_str}")
-          except Exception:
+          tags = semver_tags()
+          if tags:
+              current_ver_str = normalize_version(tags[0])
+              print(f"Found latest fork release tag: {current_ver_str}")
+          else:
               print("No tags found. Falling back to galaxy.yml or 0.0.0")
               with open('galaxy.yml', 'r') as f:
                   current_ver_str = yaml.safe_load(f).get('version', '0.0.0')
@@ -92,26 +118,32 @@ jobs:
           except ValueError:
               major, minor, patch = 0, 0, 0
 
-          # 2. Determine Bump based on Commits since last tag
-          try:
-              last_tag = run_git(['describe', '--tags', '--abbrev=0'])
-              logs = run_git(['log', f'{last_tag}..HEAD', '--oneline']).lower()
-          except Exception:
-              logs = run_git(['log', '--oneline']).lower()
-
-          bump = "patch"
-          if any(x in logs for x in ["breaking change", "!:", "feat!:"]):
-              bump = "major"
-          elif "feat:" in logs:
-              bump = "minor"
-
-          # 3. Calculate New Version
-          if bump == "major":
-              new_ver = f"{major + 1}.0.0"
-          elif bump == "minor":
-              new_ver = f"{major}.{minor + 1}.0"
+          if retry_existing_release:
+              new_ver = normalize_version(sorted(head_tags, key=normalize_version)[-1])
+              bump = "retry"
+              logs = ""
+              print(f"Retrying existing release at HEAD: {new_ver}")
           else:
-              new_ver = f"{major}.{minor}.{patch + 1}"
+              # 2. Determine Bump based on Commits since last fork release tag
+              try:
+                  last_tag = tags[0]
+                  logs = run_git(['log', f'{last_tag}..HEAD', '--oneline']).lower()
+              except Exception:
+                  logs = run_git(['log', '--oneline']).lower()
+
+              bump = "patch"
+              if any(x in logs for x in ["breaking change", "!:", "feat!:"]):
+                  bump = "major"
+              elif "feat:" in logs:
+                  bump = "minor"
+
+              # 3. Calculate New Version
+              if bump == "major":
+                  new_ver = f"{major + 1}.0.0"
+              elif bump == "minor":
+                  new_ver = f"{major}.{minor + 1}.0"
+              else:
+                  new_ver = f"{major}.{minor}.{patch + 1}"
           
           print(f"Bump type: {bump} | New Version: {new_ver}")
 
@@ -129,34 +161,35 @@ jobs:
               'authors': ['Matthew Kalnins <github@mattykay.com>', 'k3s-io community']
           })
 
-          # 5. Update CHANGELOG_FORK.md
-          today = datetime.date.today().isoformat()
-          
-          try:
-              last_tag = run_git(['describe', '--tags', '--abbrev=0'])
-              # Format: * hash - message (date)
-              changelog_raw = run_git(['log', f'{last_tag}..HEAD', '--pretty=format:* %h - %s (%ad)', '--date=short'])
-          except Exception:
-              changelog_raw = run_git(['log', '--pretty=format:* %h - %s (%ad)', '--date=short'])
+          if not retry_existing_release:
+              # 5. Update CHANGELOG_FORK.md
+              today = datetime.date.today().isoformat()
+              
+              try:
+                  last_tag = tags[0]
+                  # Format: * hash - message (date)
+                  changelog_raw = run_git(['log', f'{last_tag}..HEAD', '--pretty=format:* %h - %s (%ad)', '--date=short'])
+              except Exception:
+                  changelog_raw = run_git(['log', '--pretty=format:* %h - %s (%ad)', '--date=short'])
 
-          if not changelog_raw.strip():
-              changelog_raw = "* No code changes (administrative release or forced push)."
+              if not changelog_raw.strip():
+                  changelog_raw = "* No code changes (administrative release or forced push)."
 
-          new_changelog_entry = f"## [{new_ver}] - {today}\n\n{changelog_raw}\n\n"
+              new_changelog_entry = f"## [{new_ver}] - {today}\n\n{changelog_raw}\n\n"
 
-          changelog_file = 'CHANGELOG_FORK.md'
-          header = "# Changelog (Fork)\n\n"
-          existing_content = ""
-          
-          if os.path.exists(changelog_file):
-              with open(changelog_file, 'r') as f:
-                  # Strip the header if it exists so we don't duplicate it
-                  existing_content = f.read().replace(header, "")
+              changelog_file = 'CHANGELOG_FORK.md'
+              header = "# Changelog (Fork)\n\n"
+              existing_content = ""
+              
+              if os.path.exists(changelog_file):
+                  with open(changelog_file, 'r') as f:
+                      # Strip the header if it exists so we don't duplicate it
+                      existing_content = f.read().replace(header, "")
 
-          with open(changelog_file, 'w') as f:
-              f.write(header + new_changelog_entry + existing_content)
-          
-          print(f"Updated {changelog_file} for version {new_ver}")
+              with open(changelog_file, 'w') as f:
+                  f.write(header + new_changelog_entry + existing_content)
+              
+              print(f"Updated {changelog_file} for version {new_ver}")
 
           # 6. Ensure Role Metadata (The "Galaxy Structure Fix")
           roles_path = 'roles'
@@ -207,16 +240,32 @@ jobs:
         if: steps.sync.outputs.changed == 'true' && inputs.dry_run == false
         run: |
           git add galaxy.yml README.md CHANGELOG_FORK.md roles
-          git commit -m "chore: release ${{ steps.process.outputs.new_tag }} [skip ci]"
+          if git diff --cached --quiet; then
+            echo "No release commit changes to create."
+          else
+            git commit -m "chore: release ${{ steps.process.outputs.new_tag }} [skip ci]"
+          fi
           
-          # Create the tag locally
-          git tag ${{ steps.process.outputs.new_tag }}
+          TAG="${{ steps.process.outputs.new_tag }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            if [[ "$(git rev-parse "$TAG")" != "$(git rev-parse HEAD)" ]]; then
+              echo "Tag $TAG already exists but does not point at HEAD."
+              exit 1
+            fi
+            echo "Tag $TAG already exists at HEAD."
+          else
+            git tag "$TAG"
+          fi
           
           # Push the branch (main)
           git push origin main
           
           # Push ONLY the specific new tag to avoid touching old workflow-linked tags
-          git push origin refs/tags/${{ steps.process.outputs.new_tag }}
+          if git ls-remote --exit-code origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Remote tag $TAG already exists."
+          else
+            git push origin "refs/tags/$TAG"
+          fi
 
       - name: GitHub Release & Galaxy Publish
         if: steps.sync.outputs.changed == 'true' && inputs.dry_run == false
@@ -224,20 +273,35 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
         run: |
+          TAG="${{ steps.process.outputs.new_tag }}"
+          ARTIFACT=$(find . -maxdepth 1 -name "mattykay-k3s_ansible-${TAG}.tar.gz" -print -quit)
+          if [[ -z "$ARTIFACT" ]]; then
+            echo "Could not find collection artifact for $TAG."
+            exit 1
+          fi
+
           # Force the release to your fork specifically
-          gh release create ${{ steps.process.outputs.new_tag }} \
-            --repo ${{ github.repository }} \
-            --target main \
-            --title "Release ${{ steps.process.outputs.new_tag }}" \
-            --generate-notes
+          if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "GitHub release $TAG already exists."
+          else
+            gh release create "$TAG" \
+              --repo ${{ github.repository }} \
+              --target main \
+              --title "Release $TAG" \
+              --generate-notes
+          fi
           
           # Publish to Galaxy
-          ansible-galaxy collection publish *.tar.gz --api-key $GALAXY_API_KEY
+          if ansible-galaxy collection install "mattykay.k3s_ansible:$TAG" --force -p /tmp/galaxy-publish-check >/dev/null 2>&1; then
+            echo "Galaxy collection mattykay.k3s_ansible:$TAG already exists."
+          else
+            ansible-galaxy collection publish "$ARTIFACT" --api-key "$GALAXY_API_KEY"
+          fi
 
       - name: Prune Old Workflow Runs
         if: always()
         run: |
-          gh run list --workflow "${{ github.workflow }}" --limit 100 --json databaseId -q '.[20:].databaseId' | xargs -I{} gh run delete {}
+          gh run list --workflow "${{ github.workflow }}" --limit 100 --json databaseId -q '.[20:].databaseId' | xargs -r -I{} gh run delete {} || true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
