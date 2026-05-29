@@ -1,5 +1,15 @@
 # Changelog (Fork)
 
+## [1.2.9] - 2026-05-29
+
+* 8fafce9 - Merge remote-tracking branch 'upstream/main' (2026-05-29)
+* a05f5b5 - Invert directives when importing ref. playbook (#524) (2026-05-27)
+* 611ca0b - Fix existing token retrieval for k3s server (#534) (2026-05-27)
+* d1aab4d - Feature/oracle linux11 (#532) (2026-05-27)
+* 0457b3b - fix(ci): harden autopilot workflow supply chain (2026-05-17)
+* 2624577 - Merge pull request #525 from cwayne18/pin-actions-to-sha (2026-03-27)
+* 4acc4c7 - Pin GH Actions to commit sha (2026-03-27)
+
 ## [1.2.8] - 2026-03-15
 
 * 45ce65d - Merge branch 'main' of github.com:mattykay/k3s-ansible (2026-03-15)
