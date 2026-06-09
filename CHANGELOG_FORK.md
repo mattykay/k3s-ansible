@@ -1,5 +1,12 @@
 # Changelog (Fork)
 
+## [1.2.10] - 2026-06-09
+
+* [c839d15](https://github.com/mattykay/k3s-ansible/commit/c839d15e67140eabf753b6953741f6d08da3d533) - docs(changelog): link fork commit references (2026-05-29)
+* [4cb2dbc](https://github.com/mattykay/k3s-ansible/commit/4cb2dbc13a149d09975acd3c9bd3e2783b8b1ef7) - Merge branch 'main' of github.com:mattykay/k3s-ansible (2026-05-29)
+* [a9a7db4](https://github.com/mattykay/k3s-ansible/commit/a9a7db49b4e6f52080c0caeef205ddb110790c2d) - fix(ci): harden autopilot release retries and tag handling (2026-05-29)
+* [da9ab71](https://github.com/mattykay/k3s-ansible/commit/da9ab715598e673a12a0b5bde4e06e6ad261cf59) - fix(ci): detect upstream sync changes before release workflow steps (2026-05-29)
+
 ## [1.2.9] - 2026-05-29
 
 * [8fafce9](https://github.com/mattykay/k3s-ansible/commit/8fafce9) - Merge remote-tracking branch 'upstream/main' (2026-05-29)
