@@ -1,5 +1,11 @@
 # Changelog (Fork)
 
+## [1.2.11] - 2026-06-19
+
+* [23b6d3a](https://github.com/mattykay/k3s-ansible/commit/23b6d3a4ac234c12a7d35b7d1779814dda87c90b) - Merge remote-tracking branch 'upstream/main' (2026-06-19)
+* [e8af759](https://github.com/mattykay/k3s-ansible/commit/e8af759240c6c4069560e05a1f99681c17a3e89a) - Remove N/A label (2026-06-18)
+* [278b6bb](https://github.com/mattykay/k3s-ansible/commit/278b6bbbfe81e8f02d1c50e81681c35a390d2432) - Add dependabot bumps for GHA versions (2026-06-18)
+
 ## [1.2.10] - 2026-06-09
 
 * [c839d15](https://github.com/mattykay/k3s-ansible/commit/c839d15e67140eabf753b6953741f6d08da3d533) - docs(changelog): link fork commit references (2026-05-29)
