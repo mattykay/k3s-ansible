@@ -1,5 +1,10 @@
 # Changelog (Fork)
 
+## [1.2.12] - 2026-06-23
+
+* [fe3074c](https://github.com/mattykay/k3s-ansible/commit/fe3074c7726291fedd3a595fb2eb0ccb404c4f5a) - Merge remote-tracking branch 'upstream/main' (2026-06-23)
+* [de30fcd](https://github.com/mattykay/k3s-ansible/commit/de30fcd06ccf256f4cd0abb120e527908ebe89ba) - Bump the action-deps group across 1 directory with 3 updates (#539) (2026-06-22)
+
 ## [1.2.11] - 2026-06-19
 
 * [23b6d3a](https://github.com/mattykay/k3s-ansible/commit/23b6d3a4ac234c12a7d35b7d1779814dda87c90b) - Merge remote-tracking branch 'upstream/main' (2026-06-19)
