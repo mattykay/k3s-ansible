@@ -1,5 +1,11 @@
 # Changelog (Fork)
 
+## [1.2.13] - 2026-07-07
+
+* [0761739](https://github.com/mattykay/k3s-ansible/commit/076173957cdb3835879e321c8b31d9d60594aefa) - Merge remote-tracking branch 'upstream/main' (2026-07-07)
+* [6f87b64](https://github.com/mattykay/k3s-ansible/commit/6f87b64f1d2293248189620fe3f584ef0c146d6a) - fix: use failed_when instead of ignore_errors for version detection (#543) (2026-07-06)
+* [33b0ca9](https://github.com/mattykay/k3s-ansible/commit/33b0ca9fa0c234314beda63b932f61e79f5a8d76) - fix(raspberrypi): run detection commands in check mode (#542) (2026-07-06)
+
 ## [1.2.12] - 2026-06-23
 
 * [fe3074c](https://github.com/mattykay/k3s-ansible/commit/fe3074c7726291fedd3a595fb2eb0ccb404c4f5a) - Merge remote-tracking branch 'upstream/main' (2026-06-23)
