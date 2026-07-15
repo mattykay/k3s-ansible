@@ -1,5 +1,11 @@
 # Changelog (Fork)
 
+## [1.2.14] - 2026-07-15
+
+* [fe2a125](https://github.com/mattykay/k3s-ansible/commit/fe2a125503b43268cd3700e29552c283d1654dcf) - Merge remote-tracking branch 'upstream/main' (2026-07-15)
+* [e5ec2f0](https://github.com/mattykay/k3s-ansible/commit/e5ec2f07b462e484c5b66eb5b142c0d7dfc72be9) - fix: apply k3s version bumps declaratively through site.yml (#544) (2026-07-15)
+* [6688377](https://github.com/mattykay/k3s-ansible/commit/66883771ba96ef0b3bb4c24fbc43ae17d8361053) - Bump actions/setup-python from 6.2.0 to 6.3.0 in the action-deps group (#545) (2026-07-14)
+
 ## [1.2.13] - 2026-07-07
 
 * [0761739](https://github.com/mattykay/k3s-ansible/commit/076173957cdb3835879e321c8b31d9d60594aefa) - Merge remote-tracking branch 'upstream/main' (2026-07-07)
