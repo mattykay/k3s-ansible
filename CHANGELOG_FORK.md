@@ -1,5 +1,11 @@
 # Changelog (Fork)
 
+## [1.2.15] - 2026-08-11
+
+* [493c93a](https://github.com/mattykay/k3s-ansible/commit/493c93a496ec2e893f56c7a2570ee7ec84f1406e) - Merge remote-tracking branch 'upstream/main' (2026-08-11)
+* [35b8377](https://github.com/mattykay/k3s-ansible/commit/35b8377f74befeda237279d09d17dcc4d0c781ac) - fix(roles): fix check mode on clean install (#547) (2026-08-11)
+* [9cdd1dd](https://github.com/mattykay/k3s-ansible/commit/9cdd1dd47ce2356afd5dd66ccc76f5e860f8cfb8) - fix: read hostname from ansible_facts in the TLS SAN condition (#548) (2026-08-10)
+
 ## [1.2.14] - 2026-07-15
 
 * [fe2a125](https://github.com/mattykay/k3s-ansible/commit/fe2a125503b43268cd3700e29552c283d1654dcf) - Merge remote-tracking branch 'upstream/main' (2026-07-15)
