@@ -1,5 +1,13 @@
 # Changelog (Fork)
 
+## [1.3.0] - 2026-08-14
+
+* [5c7034e](https://github.com/mattykay/k3s-ansible/commit/5c7034e69575a9b66a70783b4ca720aa063d1b64) - Merge remote-tracking branch 'upstream/main' (2026-08-14)
+* [8a2d1e2](https://github.com/mattykay/k3s-ansible/commit/8a2d1e2e2db4e9131ace54213cc57da32e9cacab) - Add agent logs on failure (#556) (2026-08-13)
+* [445cecb](https://github.com/mattykay/k3s-ansible/commit/445cecb4231792d4cb5facc1b76a40b423c8851b) - Wrap api_endpoint with ansible.utils.ipwrap for IPv6 compatibility (#550) (2026-08-13)
+* [cb38fd9](https://github.com/mattykay/k3s-ansible/commit/cb38fd92e38514fbda445fea9b08cf6b5f76d533) - feat: add firewall variable (#552) (2026-08-13)
+* [5f98ca7](https://github.com/mattykay/k3s-ansible/commit/5f98ca7a23a3e5ff5574f8fff3cd4531076e32eb) - Increase wait time for upgrades in testing (#554) (2026-08-13)
+
 ## [1.2.15] - 2026-08-11
 
 * [493c93a](https://github.com/mattykay/k3s-ansible/commit/493c93a496ec2e893f56c7a2570ee7ec84f1406e) - Merge remote-tracking branch 'upstream/main' (2026-08-11)
