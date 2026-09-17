@@ -1,5 +1,10 @@
 # Changelog (Fork)
 
+## [1.4.0] - 2026-09-17
+
+* [9e5dbb7](https://github.com/mattykay/k3s-ansible/commit/9e5dbb7b0958d9ce10c0fe4d4a00d26a8813237d) - Merge remote-tracking branch 'upstream/main' (2026-09-17)
+* [1a600b6](https://github.com/mattykay/k3s-ansible/commit/1a600b60d37e0f8a6e2e79b0e474147b5b108ae5) - feat: make the server config file mode configurable (#561) (2026-09-16)
+
 ## [1.3.1] - 2026-08-15
 
 * No code changes (administrative release or forced push).
