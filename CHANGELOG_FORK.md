@@ -1,5 +1,11 @@
 # Changelog (Fork)
 
+## [1.5.0] - 2026-10-06
+
+* [b3349c5](https://github.com/mattykay/k3s-ansible/commit/b3349c5d6c29c01058366ca2d75284b9c4bd3114) - Merge remote-tracking branch 'upstream/main' (2026-10-06)
+* [3693646](https://github.com/mattykay/k3s-ansible/commit/3693646fce9321ea17d67f2456e3f4b95df3e6bd) - fix: only open etcd firewall ports for embedded datastore (#567) (2026-10-05)
+* [b1f5388](https://github.com/mattykay/k3s-ansible/commit/b1f5388471b0426fd60e1ac0185ecca913f575b5) - feat: roll the servers one at a time and wait for each to serve again (#562) (2026-10-05)
+
 ## [1.4.0] - 2026-09-17
 
 * [9e5dbb7](https://github.com/mattykay/k3s-ansible/commit/9e5dbb7b0958d9ce10c0fe4d4a00d26a8813237d) - Merge remote-tracking branch 'upstream/main' (2026-09-17)
