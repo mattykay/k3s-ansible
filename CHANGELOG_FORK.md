@@ -1,5 +1,10 @@
 # Changelog (Fork)
 
+## [1.5.1] - 2026-10-08
+
+* [2d55d3a](https://github.com/mattykay/k3s-ansible/commit/2d55d3a37e1e1d2d07003a2d9fb5ff55bff45be3) - Merge remote-tracking branch 'upstream/main' (2026-10-08)
+* [6b1d898](https://github.com/mattykay/k3s-ansible/commit/6b1d8985183f2af31104f0d08ff40bd68d058dbe) - fix: fall back to localhost when api_endpoint is unreachable (#558) (2026-10-07)
+
 ## [1.5.0] - 2026-10-06
 
 * [b3349c5](https://github.com/mattykay/k3s-ansible/commit/b3349c5d6c29c01058366ca2d75284b9c4bd3114) - Merge remote-tracking branch 'upstream/main' (2026-10-06)
