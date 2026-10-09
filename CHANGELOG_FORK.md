@@ -1,5 +1,10 @@
 # Changelog (Fork)
 
+## [1.5.2] - 2026-10-09
+
+* [440131d](https://github.com/mattykay/k3s-ansible/commit/440131d01cc36dc4e4e18387176cd939cffef0e1) - Merge remote-tracking branch 'upstream/main' (2026-10-09)
+* [5f06791](https://github.com/mattykay/k3s-ansible/commit/5f06791694c0d9dc63f1271dba21bf3497446d93) - Remove Private Registry from README extra features (#569) (2026-10-08)
+
 ## [1.5.1] - 2026-10-08
 
 * [2d55d3a](https://github.com/mattykay/k3s-ansible/commit/2d55d3a37e1e1d2d07003a2d9fb5ff55bff45be3) - Merge remote-tracking branch 'upstream/main' (2026-10-08)
