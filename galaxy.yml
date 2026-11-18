@@ -5,6 +5,7 @@ authors:
 build_ignore: []
 dependencies:
   ansible.posix: '>=1.5.0'
+  ansible.utils: '>=5.0.0'
   community.general: '>=7.0.0'
 description: Build a Kubernetes cluster using K3s via Ansible
 documentation: https://github.com/k3s-io/k3s-ansible/blob/main/README.md
@@ -20,4 +21,4 @@ tags:
 - infrastructure
 - linux
 - tools
-version: 1.5.2
+version: 1.5.3

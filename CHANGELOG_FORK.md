@@ -1,5 +1,9 @@
 # Changelog (Fork)
 
+## [1.5.3] - 2026-11-18
+
+* No code changes (administrative release or forced push).
+
 ## [1.5.2] - 2026-10-09
 
 * [440131d](https://github.com/mattykay/k3s-ansible/commit/440131d01cc36dc4e4e18387176cd939cffef0e1) - Merge remote-tracking branch 'upstream/main' (2026-10-09)
